@@ -1,12 +1,12 @@
 # nupnp
 
-Discovery broker for IoT devices.
+Discovery broker for IoT devices. 🤖
 
 ## API
 Register device with
 `http://localhost:3000/register?id=2323&address=192.168.100.151`
 
-## inspiration
+## Inspiration
 * http://www.meethue.com/api/nupnp
 * http://find.z-wave.me
 
@@ -16,7 +16,6 @@ Register device with
 
 ## Notes
 Users should not use this service directly, they should not bookmark it. But they will...
-
 Users should only use it to discover their device and then bookmark it.
 
 ## License

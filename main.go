@@ -35,7 +35,6 @@ func main() {
 
 		devices.Lock()
 		defer devices.Unlock()
-		// TODO: no check needed
 		devices.d[ra] = &device{
 			id:      id,
 			address: newAddress,
