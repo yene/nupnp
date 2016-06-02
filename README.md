@@ -18,5 +18,7 @@ Register device with
 Users should not use this service directly, they should not bookmark it. But they will...
 Users should only use it to discover their device and then bookmark it.
 
+The device should not publish his IP address all the time, best would be only after a startup.
+
 ## License
 MIT License
