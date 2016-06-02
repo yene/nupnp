@@ -4,7 +4,7 @@ Discovery broker for IoT devices. 🤖
 
 ## API
 Register device with
-`http://localhost:3000/register?id=2323&address=192.168.100.151`
+`http://localhost:8080/register?id=2323&name=device&address=192.168.100.151`
 
 ## Inspiration
 * http://www.meethue.com/api/nupnp
