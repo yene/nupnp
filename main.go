@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"sync"
 	"time"
@@ -33,7 +34,10 @@ func main() {
 		id := r.URL.Query().Get("id")
 		name := r.URL.Query().Get("name")
 		ia := "http://" + r.URL.Query().Get("address")
-		ea := r.RemoteAddr
+		ea, _, err := net.SplitHostPort(r.RemoteAddr)
+		if err != nil {
+			panic(err)
+		}
 
 		devices.Lock()
 		defer devices.Unlock()
@@ -56,7 +60,10 @@ func main() {
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {})
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		ea := r.RemoteAddr
+		ea, _, err := net.SplitHostPort(r.RemoteAddr)
+		if err != nil {
+			panic(err)
+		}
 
 		devices.Lock()
 		defer devices.Unlock()
@@ -70,7 +77,10 @@ func main() {
 	})
 
 	http.HandleFunc("/list.json", func(w http.ResponseWriter, r *http.Request) {
-		ea := r.RemoteAddr
+		ea, _, err := net.SplitHostPort(r.RemoteAddr)
+		if err != nil {
+			panic(err)
+		}
 
 		devices.Lock()
 		defer devices.Unlock()
