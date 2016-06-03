@@ -33,10 +33,16 @@ func main() {
 	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		id := r.URL.Query().Get("id")
 		name := r.URL.Query().Get("name")
-		ia := "http://" + r.URL.Query().Get("address")
+		ia := r.URL.Query().Get("address")
+		if net.ParseIP(ia) == nil {
+			http.NotFound(w, r)
+			return
+		}
+
 		ea, _, err := net.SplitHostPort(r.RemoteAddr)
 		if err != nil {
-			panic(err)
+			http.NotFound(w, r)
+			return
 		}
 
 		devices.Lock()
@@ -62,7 +68,8 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		ea, _, err := net.SplitHostPort(r.RemoteAddr)
 		if err != nil {
-			panic(err)
+			http.NotFound(w, r)
+			return
 		}
 
 		devices.Lock()
@@ -79,7 +86,8 @@ func main() {
 	http.HandleFunc("/list.json", func(w http.ResponseWriter, r *http.Request) {
 		ea, _, err := net.SplitHostPort(r.RemoteAddr)
 		if err != nil {
-			panic(err)
+			http.NotFound(w, r)
+			return
 		}
 
 		devices.Lock()

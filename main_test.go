@@ -10,7 +10,7 @@ import (
 
 func TestAddingDevice(t *testing.T) {
 	go main()
-	time.Sleep(time.Second * 2)
+	time.Sleep(time.Second * 1)
 	timeout := time.Duration(1 * time.Second)
 	client := http.Client{
 		Timeout: timeout,
@@ -26,6 +26,15 @@ func TestAddingDevice(t *testing.T) {
 	finalURL := resp.Request.URL.String()
 	if finalURL != "http://example.org" {
 		t.Errorf("Redirect to fallback did not work.")
+	}
+
+	// fail because of illegal address
+	resp, err = client.Get("http://localhost:8080/register?id=2323&name=device&address=192.12368.100.151")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.StatusCode != 404 {
+		t.Fatal("Illegal IP Address should fail.")
 	}
 
 	// add one device

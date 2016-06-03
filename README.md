@@ -20,6 +20,7 @@ Calling the app without parameter redirects to the first internal address.
 ## TODO
 - [ ] Check and validate query parameters.
 - [ ] Add a secret to limit access.
+- [ ] Are we going to support devices that register with local host?
 
 ## Notes
 Users should not use this service directly, they should not bookmark it. But they will...
