@@ -2,6 +2,8 @@
 
 Discovery broker for IoT devices. 🤖
 
+![screen](screen.png)
+
 ## API
 Register device with
 `http://localhost:8080/register?id=2323&name=device&address=192.168.100.151`

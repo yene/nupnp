@@ -76,6 +76,7 @@ func main() {
 		defer devices.Unlock()
 
 		ds := devicesFor(ea)
+		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(ds); err != nil {
 			panic(err)
 		}
