@@ -6,12 +6,17 @@ Discovery broker for IoT devices. 🤖
 Register device with
 `http://localhost:8080/register?id=2323&name=device&address=192.168.100.151`
 
+List device with
+`http://localhost:8080/list.json`
+
+Calling the app without parameter redirects to the first internal address.
+
 ## Inspiration
 * http://www.meethue.com/api/nupnp
 * http://find.z-wave.me
 
 ## TODO
-- [ ] Check and validate parameters.
+- [ ] Check and validate query parameters.
 - [ ] Add a secret to limit access.
 
 ## Notes
