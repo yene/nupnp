@@ -22,11 +22,14 @@ Calling the app without parameter redirects to the first internal address.
 - [ ] Add a secret to limit access.
 - [ ] Are we going to support devices that register with local host?
 
+## Security
+Never allow another IP address to access the data. Don't store the data.
+
 ## Notes
 Users should not use this service directly, they should not bookmark it. But they will...
 Users should only use it to discover their device and then bookmark it.
 
-The device should not publish his IP address all the time, best would be only after a startup.
+The device should not publish his IP address all the time, best would be only after a startup or after user requests it.
 
 ## License
 MIT License

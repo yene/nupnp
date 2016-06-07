@@ -33,9 +33,14 @@ func main() {
 	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		id := r.URL.Query().Get("id")
 		name := r.URL.Query().Get("name")
-		ia := r.URL.Query().Get("address")
+		ia := r.FormValue("address")
+		if ia == "" {
+			http.Error(w, `missing "address" URL parameter`, http.StatusBadRequest)
+			return
+		}
+
 		if net.ParseIP(ia) == nil {
-			http.NotFound(w, r)
+			http.Error(w, `"address" parameter is not a valid addresss`, http.StatusBadRequest)
 			return
 		}
 
