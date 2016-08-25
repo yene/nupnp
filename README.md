@@ -15,12 +15,15 @@ List device with:
 http://localhost:8180/api/devices
 ```
 
-## Register to nupnp.com
-Put this script into `/etc/cron.daily`.
+## Register to nupnp.com once a day
+Put this script into `/etc/cron.daily/nupnp`.
 ```
+#!/bin/sh
 ip=$(ip -f inet -o addr show eth0|cut -d\  -f 7 | cut -d/ -f 1)
 curl -H "Content-Type: application/json" -X POST -d "{\"id\":\"41945125\",\"name\":\"$(hostname)\",\"address\":\"$ip\"}" https://nupnp.com/api/register
 ```
+`chmod +x /etc/cron.daily/nupnp`
+Test with `run-parts /etc/cron.daily`
 
 ## Inspiration
 >After about 1 minute open a web browser and point to find.z-wave.me. Below the login screen you will see the IP address of your RaZberry system. Click on the IP address link to open the configuration dialog.
@@ -42,6 +45,8 @@ curl -H "Content-Type: application/json" -X POST -d "{\"id\":\"41945125\",\"name
 - [ ] return success message "device added, visit https://nupnp.com"
 - [ ] if id is missing, generate uuid
 - [ ] Add support for port parameter
+- [ ] expose date, sort by date, convert with time ago
+- [ ] make a copy paste install script, LUL
 
 ## Security
 Never allow another IP address to access the data. Remove the entries after 24h.

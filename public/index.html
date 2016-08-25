@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>NUPNP</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="stylesheet" media="screen" href="https://raw.github.com/necolas/normalize.css/master/normalize.css">
   <link rel="stylesheet" href="font-awesome-4.6.3/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="bulma-0.1.2/css/bulma.css"/>
@@ -55,7 +56,7 @@
 
   <section class="section" id="devices">
     <div class="container">
-      <h1 class="title">Devices Inside Your Network</h1>
+      <h1 class="title">Devices inside your network</h1>
       <template class="device-template">
         <li class="device-container">
           <a class="device-link" href="">
@@ -83,11 +84,31 @@
     </div>
   </section>
 
+  <div class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-container">
+      <div class="modal-content">
+        <div class="box">
+          <h2><a id="Register_to_nupnpcom_once_a_day_0"></a>Register to <a href="http://nupnp.com">nupnp.com</a> once a day</h2>
+          <p>Save the following script as <code>/etc/cron.daily/nupnp</code>.</p>
+          <pre><code class="bash">
+  #!/bin/sh
+  ip=$(ip -f inet -o addr show eth0|cut -d\  -f 7 | cut -d/ -f 1)
+  curl -H "Content-Type: application/json" -X POST -d "{\"id\":\"41945125\",\"name\":\"$(hostname)\",\"address\":\"$ip\"}" https://nupnp.com/api/register
+          </code></pre>
+          <p>Allow the file to be executed <code>chmod +x /etc/cron.daily/nupnp</code></p>
+          <p>Test with <code>run-parts /etc/cron.daily</code></p>
+        </div>
+      </div>
+    </div>
+    <button class="modal-close"></button>
+  </div>
+
   <footer class="footer">
     <div class="container">
       <div class="content has-text-centered">
         <p>
-          <strong>NUPNP</strong> made by <a href="https://yannickweiss.com">Yannick Weiss</a>.
+          <strong>NUPNP</strong> was made by <a href="https://yannickweiss.com">Yannick Weiss</a> for <a href="http://nomos-system.com">nomos-system</a>.
         </p>
       </div>
     </div>
