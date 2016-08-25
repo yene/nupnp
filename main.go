@@ -30,7 +30,6 @@ func main() {
 	devices.d = make([]Device, 0)
 
 	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
-		log.Println(r.Header.Get("Content-Type"))
 		if r.Header.Get("Content-Type") != "application/json" {
 			http.Error(w, "Please send json", 400)
 			return
@@ -52,7 +51,35 @@ func main() {
 			http.Error(w, err.Error(), 400)
 			return
 		}
-		log.Println(t.Name)
+
+		if net.ParseIP(t.Address) == nil {
+			http.Error(w, `"address" is not a valid IP addresss`, http.StatusBadRequest)
+			return
+		}
+
+		ea, _, err := net.SplitHostPort(r.RemoteAddr)
+		if err != nil {
+			http.NotFound(w, r)
+			return
+		}
+
+		devices.Lock()
+		defer devices.Unlock()
+
+		if i, ok := findDevice(t.Address, ea); ok {
+			devices.d[i].Id = t.Id
+			devices.d[i].Name = t.Name
+			devices.d[i].Added = time.Now()
+		} else {
+			devices.d = append(devices.d, Device{
+				ExternalAddress: ea,
+				InternalAddress: t.Address,
+				Id:              t.Id,
+				Name:            t.Name,
+				Added:           time.Now(),
+			})
+		}
+
 	})
 
 	http.HandleFunc("/register_get", func(w http.ResponseWriter, r *http.Request) {

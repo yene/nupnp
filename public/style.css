@@ -11,6 +11,13 @@ body {
   font-family: -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
 }
 
+body p + p {
+  margin-top: 1.5rem;
+}
+
+body section + section {
+  margin-top: 1.5rem;
+}
 
 /*
 @keyframes pulse {

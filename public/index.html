@@ -12,28 +12,48 @@
   <script src="main.js"></script>
 </head>
 <body>
-  <section class="hero">
-    <div class="hero-body">
+<section class="hero is-primary is-medium is-bold">
+  <div class="hero-head">
+    <header class="nav">
       <div class="container">
-        <nav class="nav">
-          <div class="nav-left">
-            NUPNP - a portal to make it easier to find your IoT devices.
-          </div>
+        <div class="nav-left">
+          <a class="nav-item" href="/">
+            <img src="logo.png" alt="Logo">
+          </a>
+        </div>
+        <span class="nav-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+        <div class="nav-right nav-menu">
+          <a class="nav-item is-active" href="#devices">
+            Devices
+          </a>
 
-          <div class="nav-right nav-menu">
-            <a class="nav-item" href="">
-              Devices
+          <!--
+          <a class="nav-item" href="#register">
+            Register
+          </a>
+          <a class="nav-item">
+            About
+          </a>
+          -->
+          <span class="nav-item">
+            <a class="button is-primary is-inverted" href="https://github.com/yene/nupnp">
+              <span class="icon">
+                <i class="fa fa-github"></i>
+              </span>
+              <span>Github</span>
             </a>
-            <a class="nav-item" href="">
-              Setup
-            </a>
-          </div>
-        </nav>
+          </span>
+        </div>
       </div>
-    </div>
-  </section>
+    </header>
+  </div>
+</section>
 
-  <section class="section" id="lights">
+  <section class="section" id="devices">
     <div class="container">
       <h1 class="title">Devices Inside Your Network</h1>
       <template class="device-template">
@@ -45,22 +65,20 @@
         </li>
       </template>
       <ul class="device-list">
+        <li>No devices found.</li>
       </ul>
     </div>
   </section>
 
-  <section class="section" id="lights">
+  <section class="section" id="register">
     <div class="container">
-      <h1 class="title">Help</h1>
+      <h1 class="title">Register</h1>
       <p>
-        Open <a href="http://nupnp.com/redirect">nupnp.com/latest</a> to go to your
+        To register your own device send a POST request:<br>
+        <code>curl -H "Content-Type: application/json" -X POST -d '{"id":"41945125","name":"Testdevice","address":"192.168.100.151"}' https://nupnp.com/register</code>
       </p>
       <p>
-        Register your device once a day with:
-        <code><pre>curl http://nupnp.com/register?id=2323&name=device&address=192.168.100.151</pre></code>
-      </p>
-      <p>
-        An entry gets deleted after 24h and can only be accessed by the same IP-Address.
+        Any entry gets deleted after <strong>24h</strong> and can only be accessed by the same IP address.
       </p>
     </div>
   </section>

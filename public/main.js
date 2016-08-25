@@ -27,6 +27,10 @@ function listDevices() {
     if (this.status >= 200 && this.status < 400) {
       var devices = JSON.parse(this.response);
 
+      if (devices.length === 0) {
+        return;
+      }
+
       var list = document.querySelector('.device-list');
       list.innerHTML = '';
 

@@ -33,9 +33,10 @@ curl -H "Content-Type: application/json" -X POST -d '{"id":"41945125","name":"Te
 - [ ] Are we going to support devices that register with local host?
 - [ ] rate limit requests
 - [ ] Create access keys for email address, which are not rate limited
-- [ ] let user create custom namespaces
+- [ ] let user create custom namespaces (paired with access keys)
 - [ ] Do I need to use an in memory database?
 - [ ] Tests
+- [ ] sanitize input
 
 ## Security
 Never allow another IP address to access the data. Don't store the data.
