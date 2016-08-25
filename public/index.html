@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>NUPNP</title>
+  <link rel="stylesheet" media="screen" href="https://raw.github.com/necolas/normalize.css/master/normalize.css">
+  <link rel="stylesheet" href="font-awesome-4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="bulma-0.1.2/css/bulma.css"/>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <script src="main.js"></script>
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container">
+        <nav class="nav">
+          <div class="nav-left">
+            NUPNP - a portal to make it easier to find your IoT devices.
+          </div>
+
+          <div class="nav-right nav-menu">
+            <a class="nav-item" href="">
+              Devices
+            </a>
+            <a class="nav-item" href="">
+              Setup
+            </a>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="lights">
+    <div class="container">
+      <h1 class="title">Devices Inside Your Network</h1>
+      <template class="device-template">
+        <li class="device-container">
+          <a class="device-link" href="">
+            <span class="device-name"></span>
+            <span class="device-id"></span>
+          </a>
+        </li>
+      </template>
+      <ul class="device-list">
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="lights">
+    <div class="container">
+      <h1 class="title">Help</h1>
+      <p>
+        Open <a href="http://nupnp.com/redirect">nupnp.com/latest</a> to go to your
+      </p>
+      <p>
+        Register your device once a day with:
+        <code><pre>curl http://nupnp.com/register?id=2323&name=device&address=192.168.100.151</pre></code>
+      </p>
+      <p>
+        An entry gets deleted after 24h and can only be accessed by the same IP-Address.
+      </p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        <p>
+          <strong>NUPNP</strong> made by <a href="https://yannickweiss.com">Yannick Weiss</a>.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

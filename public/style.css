@@ -1,0 +1,52 @@
+html, body, main {
+  height: 100%;
+  width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
+}
+
+
+/*
+@keyframes pulse {
+    0% { transform: scale(1) }
+    50% { transform: scale(1.05) }
+    100% { transform: scale(1) }
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+    animation: pulse 0.5s linear 1;
+}
+*/
+
+.fa-check {
+  font-size: 45px !important;
+  color: #5ba25b;
+}
+
+.fa-times {
+  font-size: 45px !important;
+  color: #e84135;
+}
+
+.lights-list {
+  font-size: 20px;
+}
+
+.light-icon[data-state="true"] {
+  color: #5ba25b;
+}
+
+.light-icon[data-state="false"] {
+  color: #e84135;
+}

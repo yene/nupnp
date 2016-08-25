@@ -29,7 +29,7 @@ func TestAddingDevice(t *testing.T) {
 	}
 
 	// fail because of illegal address
-	resp, err = client.Get("http://localhost:8080/register?id=2323&name=device&address=192.12368.100.151")
+	resp, err = client.Get("http://localhost:8080/register_get?id=2323&name=device&address=192.12368.100.151")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -38,7 +38,7 @@ func TestAddingDevice(t *testing.T) {
 	}
 
 	// add one device
-	resp, err = client.Get("http://localhost:8080/register?id=2323&name=device&address=192.168.100.151")
+	resp, err = client.Get("http://localhost:8080/register_get?id=2323&name=device&address=192.168.100.151")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -46,7 +46,7 @@ func TestAddingDevice(t *testing.T) {
 		t.Fatalf("Received non-200 response: %d\n", resp.StatusCode)
 	}
 
-	resp, err = client.Get("http://localhost:8080/list.json")
+	resp, err = client.Get("http://localhost:8080/devices")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -69,7 +69,7 @@ func TestAddingDevice(t *testing.T) {
 	}
 
 	// update first device
-	resp, err = client.Get("http://localhost:8080/register?id=232323&name=device23&address=192.168.100.151")
+	resp, err = client.Get("http://localhost:8080/register_get?id=232323&name=device23&address=192.168.100.151")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -77,7 +77,7 @@ func TestAddingDevice(t *testing.T) {
 		t.Fatalf("Received non-200 response: %d\n", resp.StatusCode)
 	}
 
-	resp, err = client.Get("http://localhost:8080/list.json")
+	resp, err = client.Get("http://localhost:8080/devices")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -103,7 +103,7 @@ func TestAddingDevice(t *testing.T) {
 	}
 
 	// add second
-	resp, err = client.Get("http://localhost:8080/register?id=23232&name=device2&address=192.168.100.152")
+	resp, err = client.Get("http://localhost:8080/register_get?id=23232&name=device2&address=192.168.100.152")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -111,7 +111,7 @@ func TestAddingDevice(t *testing.T) {
 		t.Fatalf("Received non-200 response: %d\n", resp.StatusCode)
 	}
 
-	resp, err = client.Get("http://localhost:8080/list.json")
+	resp, err = client.Get("http://localhost:8080/devices")
 	if err != nil {
 		t.Fatal(err)
 	}
