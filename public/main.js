@@ -21,7 +21,7 @@ function setupUI() {
 
 function listDevices() {
   var request = new XMLHttpRequest();
-  request.open('GET', location.origin + '/devices.json', true);
+  request.open('GET', location.origin + '/api/devices', true);
 
   request.onload = function() {
     if (this.status >= 200 && this.status < 400) {
@@ -37,8 +37,8 @@ function listDevices() {
       devices.forEach(function(l) {
 
         var t = document.querySelector('.device-template');
-        t.content.querySelector('.device-name').textContent = l.name;
-        t.content.querySelector('.device-id').textContent = l.id;
+        t.content.querySelector('.device-name').textContent = l.name + ' on ' + l.internaladdress;
+        //t.content.querySelector('.device-id').textContent = l.id;
         t.content.querySelector('.device-link').href = 'http://' + l.internaladdress;
         var clone = document.importNode(t.content, true);
         list.appendChild(clone);

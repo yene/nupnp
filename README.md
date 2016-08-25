@@ -7,19 +7,20 @@ Discovery broker for IoT devices. 🤖
 ## API
 Register device with:
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"id":"41945125","name":"Testdevice","address":"192.168.100.151"}' https://nupnp.com/register
+curl -H "Content-Type: application/json" -X POST -d '{"id":"41945125","name":"Testdevice","address":"192.168.100.151"}' http://localhost:8180/api/register
 ```
-`http://localhost:8080/register?id=2323&name=device&address=192.168.100.151`
 
 List device with:
 ```
-http://localhost:8080/devices
+http://localhost:8180/api/devices
 ```
 
-Calling the app without parameter redirects to the first internal address.
-
-curl -H "Content-Type: application/json" -X POST -d '{"id":"41945125","name":"Testdevice","address":"192.168.100.151"}' https://nupnp.com/register
-
+## Register to nupnp.com
+Put this script into `/etc/cron.daily`.
+```
+ip=$(ip -f inet -o addr show eth0|cut -d\  -f 7 | cut -d/ -f 1)
+curl -H "Content-Type: application/json" -X POST -d "{\"id\":\"41945125\",\"name\":\"$(hostname)\",\"address\":\"$ip\"}" https://nupnp.com/api/register
+```
 
 ## Inspiration
 >After about 1 minute open a web browser and point to find.z-wave.me. Below the login screen you will see the IP address of your RaZberry system. Click on the IP address link to open the configuration dialog.
@@ -37,9 +38,13 @@ curl -H "Content-Type: application/json" -X POST -d '{"id":"41945125","name":"Te
 - [ ] Do I need to use an in memory database?
 - [ ] Tests
 - [ ] sanitize input
+- [ ] sort devices by date added
+- [ ] return success message "device added, visit https://nupnp.com"
+- [ ] if id is missing, generate uuid
+- [ ] Add support for port parameter
 
 ## Security
-Never allow another IP address to access the data. Don't store the data.
+Never allow another IP address to access the data. Remove the entries after 24h.
 
 ## Notes
 Users should not use this service directly, they should not bookmark it. But they will...

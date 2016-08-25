@@ -11,7 +11,7 @@ import (
 )
 
 const lifetime time.Duration = 24 * time.Hour
-const httpAddr = ":8080"
+const httpAddr = ":8180"
 
 var devices struct {
 	sync.Mutex
@@ -29,7 +29,7 @@ type Device struct {
 func main() {
 	devices.d = make([]Device, 0)
 
-	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/api/register", func(w http.ResponseWriter, r *http.Request) {
 		if r.Header.Get("Content-Type") != "application/json" {
 			http.Error(w, "Please send json", 400)
 			return
@@ -122,7 +122,7 @@ func main() {
 
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {})
 
-	http.HandleFunc("/devices.json", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/api/devices", func(w http.ResponseWriter, r *http.Request) {
 		ea, _, err := net.SplitHostPort(r.RemoteAddr)
 		if err != nil {
 			http.NotFound(w, r)

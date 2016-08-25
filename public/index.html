@@ -75,10 +75,10 @@
       <h1 class="title">Register</h1>
       <p>
         To register your own device send a POST request:<br>
-        <code>curl -H "Content-Type: application/json" -X POST -d '{"id":"41945125","name":"Testdevice","address":"192.168.100.151"}' https://nupnp.com/register</code>
+        <code>curl -H "Content-Type: application/json" -X POST -d '{"name":"Testdevice","address":"192.168.100.151"}' https://nupnp.com/api/register</code>
       </p>
       <p>
-        Any entry gets deleted after <strong>24h</strong> and can only be accessed by the same IP address.
+        Any entry gets deleted after <strong>24h</strong> and can only be accessed by the IP address which registered it.
       </p>
     </div>
   </section>
