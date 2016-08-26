@@ -74,7 +74,7 @@
     <div class="container">
       <h1 class="title">Register</h1>
       <p>
-        Any entry gets deleted after <strong>24h</strong> and can only be accessed by the <strong>same</strong> IP address which registered it.
+        Any entry gets deleted after <strong>24h</strong> and can only be accessed by the <strong>same</strong> internet connection which registered it.
       </p>
 
       <p>
@@ -93,17 +93,19 @@
     <div class="modal-container">
       <div class="modal-content">
         <div class="box">
-          <h3 class="title is-3">Register once a day to nupnp.com</h3>
+          <h3 class="title is-3">How to setup on Raspberry Pi</h3>
           <ul>
-            <li>1. Create a daily cron with <code>nano /etc/cron.daily/nupnp</code>.</li>
-            <li>2. Paste the following script which will register your device with hostname and IP.</li>
+            <li>1. Edit the crontab file with <code>crontab -e</code>.</li>
+            <li>2. If you want to register after each reboot paste:</li>
             <li>
-            <pre><code class="bash">#!/bin/sh
-ip=$(ip -f inet -o addr show eth0|cut -d\  -f 7 | cut -d/ -f 1)
-curl -H "Content-Type: application/json" -X POST -d "{\"id\":\"41945125\",\"name\":\"$(hostname)\",\"address\":\"$ip\"}" https://nupnp.com/api/register</code></pre>
+            <pre><code class="bash">@reboot sleep 10 && /usr/bin/curl -H "Content-Type: application/json" -X POST -d "{\"name\":\"$(hostname)\",\"address\":\"$(hostname -I)\"}" https://nupnp.com/api/register</code></pre>
             </li>
-            <li>3. Allow the file to be executed <code>chmod +x /etc/cron.daily/nupnp</code></li>
-            <li>4. Test run with <code>run-parts /etc/cron.daily</code> and open <a href="https://nupnp.com">nupnp.com</a></li>
+            <li>3. If you want to register daily at midnight paste:</li>
+            <li>
+            <pre><code class="bash">@daily /usr/bin/curl -H "Content-Type: application/json" -X POST -d "{\"name\":\"$(hostname)\",\"address\":\"$(hostname -I)\"}" https://nupnp.com/api/register</code></pre>
+            </li>
+            <li>4. Save and restart device</li>
+            <li>5. Refresh <a href="https://nupnp.com">nupnp.com</a></li>
           </ul>
         </div>
       </div>

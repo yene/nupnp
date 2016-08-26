@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"strings"
 	"sync"
 	"time"
 )
@@ -51,6 +52,8 @@ func main() {
 			http.Error(w, err.Error(), 400)
 			return
 		}
+
+		t.Address = strings.Trim(t.Address, " ")
 
 		if net.ParseIP(t.Address) == nil {
 			http.Error(w, `"address" is not a valid IP addresss`, http.StatusBadRequest)

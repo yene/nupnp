@@ -19,8 +19,7 @@ http://localhost:8180/api/devices
 Put this script into `/etc/cron.daily/nupnp`.
 ```
 #!/bin/sh
-ip=$(ip -f inet -o addr show eth0|cut -d\  -f 7 | cut -d/ -f 1)
-curl -H "Content-Type: application/json" -X POST -d "{\"id\":\"41945125\",\"name\":\"$(hostname)\",\"address\":\"$ip\"}" https://nupnp.com/api/register
+curl -H "Content-Type: application/json" -X POST -d "{\"name\":\"$(hostname)\",\"address\":\"$(hostname -I)\"}" https://nupnp.com/api/register
 ```
 `chmod +x /etc/cron.daily/nupnp`
 Test with `run-parts /etc/cron.daily`
@@ -48,7 +47,9 @@ Test with `run-parts /etc/cron.daily`
 - [ ] expose date, sort by date, convert with time ago
 - [ ] make a copy paste install script, LUL
 - [ ] fix NUPNP logo
-- [ ] add support for product id, rdns
+
+## restarting demon
+killall nupnp && nohup nupnp &
 
 ## Security
 Never allow another IP address to access the data. Remove the entries after 24h.
