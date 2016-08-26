@@ -1,3 +1,5 @@
+
+// for IE 9,10,11
 if (!window.location.origin) {
   window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
 }
@@ -5,18 +7,27 @@ if (!window.location.origin) {
 document.addEventListener('DOMContentLoaded', setupUI);
 function setupUI() {
   listDevices();
-  return;
+  document.querySelector('.nav-toggle').addEventListener ('click', toggleNav);
+  document.querySelector('.modal-open').addEventListener('click', openModal);
+  document.querySelector('.modal-close').addEventListener('click', closeModal);
+  document.querySelector('.modal-background').addEventListener('click', closeModal);
+}
 
-  var scanBtn = document.querySelector('.setup-scan');
-  scanBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    scanBtn.classList.add('is-loading');
-    console.log('start scaning');
-    scanLights(function() {
-      scanBtn.classList.remove('is-loading');
-      listLights();
-    });
-  });
+function openModal() {
+  document.querySelector('.modal').classList.add('is-active');
+}
+
+function closeModal() {
+  document.querySelector('.modal').classList.remove('is-active');
+}
+
+function toggleNav() {
+  var nav = document.querySelector(".nav-menu");
+  if (nav.classList.contains('is-active')) {
+    nav.classList.remove('is-active');
+  } else {
+    nav.classList.add('is-active');
+  }
 }
 
 function listDevices() {
@@ -67,25 +78,4 @@ function addIcon(e, icon) {
   i.classList.add('fa');
   i.classList.add('fa-' + icon);
   return e.appendChild(i);
-}
-
-function turnon(uuid) {
-  var light = document.querySelector('.light-container[data-uuid="'+uuid+'"]');
-  light.querySelector('.light-on').classList.add('is-loading');
-
-  setTimeout(function(){
-    light.querySelector('.light-on').classList.remove('is-loading');
-    light.querySelector('.light-icon').dataset['state'] = String(true);
-  }, 3000);
-
-}
-
-function turnoff(uuid, cb) {
-  var light = document.querySelector('.light-container[data-uuid="'+uuid+'"]');
-  light.querySelector('.light-off').classList.add('is-loading');
-
-  setTimeout(function(){
-    light.querySelector('.light-off').classList.remove('is-loading');
-    light.querySelector('.light-icon').dataset['state'] = String(false);
-  }, 3000);
 }

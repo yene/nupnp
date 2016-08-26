@@ -12,11 +12,22 @@ body {
 }
 
 body p + p {
-  margin-top: 1.5rem;
+  margin-top: 0.4rem;
 }
 
 body section + section {
   margin-top: 1.5rem;
+}
+
+.is-brand {
+  opacity: 0.9;
+}
+
+@media screen and (max-width: 979px) {
+  .nav > .container > .nav-left > .nav-item.is-brand:first-child,
+  .container > .nav > .nav-left > .nav-item.is-brand:first-child {
+    padding-left: 20px;
+  }
 }
 
 /*

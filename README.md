@@ -47,6 +47,8 @@ Test with `run-parts /etc/cron.daily`
 - [ ] Add support for port parameter
 - [ ] expose date, sort by date, convert with time ago
 - [ ] make a copy paste install script, LUL
+- [ ] fix NUPNP logo
+- [ ] add support for product id, rdns
 
 ## Security
 Never allow another IP address to access the data. Remove the entries after 24h.
@@ -56,6 +58,8 @@ Users should not use this service directly, they should not bookmark it. But the
 Users should only use it to discover their device and then bookmark it.
 
 The device should not publish his IP address all the time, best would be only after a startup or after user requests it.
+
+Font used is Days.
 
 ## License
 [MIT](https://tldrlegal.com/license/mit-license)

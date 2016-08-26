@@ -18,12 +18,11 @@
     <header class="nav">
       <div class="container">
         <div class="nav-left">
-          <a class="nav-item" href="/">
+          <a class="nav-item is-brand" href="/">
             <img src="logo.png" alt="Logo">
           </a>
         </div>
         <span class="nav-toggle">
-          <span></span>
           <span></span>
           <span></span>
         </span>
@@ -75,11 +74,16 @@
     <div class="container">
       <h1 class="title">Register</h1>
       <p>
-        To register your own device send a POST request:<br>
-        <code>curl -H "Content-Type: application/json" -X POST -d '{"name":"Testdevice","address":"192.168.100.151"}' https://nupnp.com/api/register</code>
+        Any entry gets deleted after <strong>24h</strong> and can only be accessed by the <strong>same</strong> IP address which registered it.
       </p>
+
       <p>
-        Any entry gets deleted after <strong>24h</strong> and can only be accessed by the IP address which registered it.
+        To register your a device send a POST request:
+        <pre><code class="bash">curl -H "Content-Type: application/json" -X POST -d '{"name":"Devicename","address":"192.168.1.XX"}' https://nupnp.com/api/register</code></pre>
+      </p>
+
+      <p>
+        <a class="modal-open">How to setup on Raspberry Pi</a>
       </p>
     </div>
   </section>
@@ -89,15 +93,18 @@
     <div class="modal-container">
       <div class="modal-content">
         <div class="box">
-          <h2><a id="Register_to_nupnpcom_once_a_day_0"></a>Register to <a href="http://nupnp.com">nupnp.com</a> once a day</h2>
-          <p>Save the following script as <code>/etc/cron.daily/nupnp</code>.</p>
-          <pre><code class="bash">
-  #!/bin/sh
-  ip=$(ip -f inet -o addr show eth0|cut -d\  -f 7 | cut -d/ -f 1)
-  curl -H "Content-Type: application/json" -X POST -d "{\"id\":\"41945125\",\"name\":\"$(hostname)\",\"address\":\"$ip\"}" https://nupnp.com/api/register
-          </code></pre>
-          <p>Allow the file to be executed <code>chmod +x /etc/cron.daily/nupnp</code></p>
-          <p>Test with <code>run-parts /etc/cron.daily</code></p>
+          <h3 class="title is-3">Register once a day to nupnp.com</h3>
+          <ul>
+            <li>1. Create a daily cron with <code>nano /etc/cron.daily/nupnp</code>.</li>
+            <li>2. Paste the following script which will register your device with hostname and IP.</li>
+            <li>
+            <pre><code class="bash">#!/bin/sh
+ip=$(ip -f inet -o addr show eth0|cut -d\  -f 7 | cut -d/ -f 1)
+curl -H "Content-Type: application/json" -X POST -d "{\"id\":\"41945125\",\"name\":\"$(hostname)\",\"address\":\"$ip\"}" https://nupnp.com/api/register</code></pre>
+            </li>
+            <li>3. Allow the file to be executed <code>chmod +x /etc/cron.daily/nupnp</code></li>
+            <li>4. Test run with <code>run-parts /etc/cron.daily</code> and open <a href="https://nupnp.com">nupnp.com</a></li>
+          </ul>
         </div>
       </div>
     </div>
@@ -109,6 +116,9 @@
       <div class="content has-text-centered">
         <p>
           <strong>NUPNP</strong> was made by <a href="https://yannickweiss.com">Yannick Weiss</a> for <a href="http://nomos-system.com">nomos-system</a>.
+        </p>
+        <p>
+          <i>"Not another fucking cloud service" - Richard S.</i>
         </p>
       </div>
     </div>
