@@ -22,9 +22,9 @@ var devices struct {
 type Device struct {
 	ExternalAddress string    `json:"-"`
 	InternalAddress string    `json:"internaladdress"`
-	Id              string    `json:"id"`
+	Id              string    `json:"-"`
 	Name            string    `json:"name"`
-	Added           time.Time `json:"-"`
+	Added           time.Time `json:"added"`
 }
 
 func main() {
