@@ -55,8 +55,22 @@ func main() {
 
 		t.Address = strings.Trim(t.Address, " ")
 
+		if t.Address == "127.0.0.1" {
+			http.Error(w, `"127.0.0.1" is not allowed`, http.StatusBadRequest)
+			return
+		}
+
 		if net.ParseIP(t.Address) == nil {
-			http.Error(w, `"address" is not a valid IP addresss`, http.StatusBadRequest)
+			// TODO: replace address with the IP
+			http.Error(w, `"address" is not a valid IP address`, http.StatusBadRequest)
+			return
+		}
+
+		// TODO: detect if address is  not local,
+		// I guess 192. and 172. and 10. and ms/apple static
+		if addressIsLocal(t.Address) {
+			// TODO: replace address with the IP
+			http.Error(w, `"address" is not a typical local IP address`, http.StatusBadRequest)
 			return
 		}
 
@@ -85,6 +99,7 @@ func main() {
 			})
 		}
 
+		fmt.Fprintf(w, "Successfully added, visit https://nupnp.com for more.\n")
 	})
 
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {})
@@ -133,6 +148,20 @@ func devicesFor(ea string) []Device {
 		}
 	}
 	return found
+}
+
+func addressIsLocal(addr string) bool {
+	if strings.HasPrefix(addr, "192.168") {
+		return true
+	}
+	if strings.HasPrefix(addr, "172.") {
+		return true
+	}
+	if strings.HasPrefix(addr, "10.0") {
+		return true
+	}
+
+	return false
 }
 
 func cleanup() {
