@@ -50,11 +50,14 @@ function listDevices() {
       });
 
       devices.forEach(function(l) {
-
         var t = document.querySelector('.device-template');
         t.content.querySelector('.device-name').textContent = l.name + ' on ' + l.internaladdress;
         //t.content.querySelector('.device-id').textContent = l.id;
-        t.content.querySelector('.device-link').href = 'http://' + l.internaladdress;
+        if (l.port) {
+          t.content.querySelector('.device-link').href = 'http://' + l.internaladdress + ':' + l.port;
+        } else {
+          t.content.querySelector('.device-link').href = 'http://' + l.internaladdress;
+        }
         var clone = document.importNode(t.content, true);
         list.appendChild(clone);
       });

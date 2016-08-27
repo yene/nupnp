@@ -22,7 +22,8 @@ var devices struct {
 type Device struct {
 	ExternalAddress string    `json:"-"`
 	InternalAddress string    `json:"internaladdress"`
-	Id              string    `json:"-"`
+	Port            int       `json:"port"` // optional
+	Id              string    `json:"-"`    // not used atm
 	Name            string    `json:"name"`
 	Added           time.Time `json:"added"`
 }
@@ -45,6 +46,7 @@ func main() {
 			Id      string `json:"id"`
 			Name    string `json:"name"`
 			Address string `json:"address"`
+			Port    int    `json:"port"`
 		}
 
 		err := json.NewDecoder(r.Body).Decode(&t)
@@ -68,7 +70,7 @@ func main() {
 
 		// TODO: detect if address is  not local,
 		// I guess 192. and 172. and 10. and ms/apple static
-		if addressIsLocal(t.Address) {
+		if !addressIsLocal(t.Address) {
 			// TODO: replace address with the IP
 			http.Error(w, `"address" is not a typical local IP address`, http.StatusBadRequest)
 			return
@@ -88,11 +90,13 @@ func main() {
 		if i, ok := findDevice(t.Address, ea); ok {
 			devices.d[i].Id = t.Id
 			devices.d[i].Name = t.Name
+			devices.d[i].Port = t.Port
 			devices.d[i].Added = time.Now()
 		} else {
 			devices.d = append(devices.d, Device{
 				ExternalAddress: ea,
 				InternalAddress: t.Address,
+				Port:            t.Port,
 				Id:              t.Id,
 				Name:            t.Name,
 				Added:           time.Now(),
