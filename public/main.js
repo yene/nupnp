@@ -45,7 +45,7 @@ function listDevices() {
       var list = document.querySelector('.device-list');
       list.innerHTML = '';
 
-      devices = devices.sort(function(a,b){
+      devices.sort(function(a,b){
         return new Date(b.added) - new Date(a.added);
       });
 

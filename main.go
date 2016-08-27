@@ -60,6 +60,8 @@ func main() {
 			return
 		}
 
+		// TODO: validate parameter name required and no html/js
+
 		ea, _, err := net.SplitHostPort(r.RemoteAddr)
 		if err != nil {
 			http.NotFound(w, r)
@@ -85,44 +87,6 @@ func main() {
 
 	})
 
-	http.HandleFunc("/register_get", func(w http.ResponseWriter, r *http.Request) {
-		id := r.URL.Query().Get("id")
-		name := r.URL.Query().Get("name")
-		ia := r.FormValue("address")
-		if ia == "" {
-			http.Error(w, `missing "address" URL parameter`, http.StatusBadRequest)
-			return
-		}
-
-		if net.ParseIP(ia) == nil {
-			http.Error(w, `"address" parameter is not a valid addresss`, http.StatusBadRequest)
-			return
-		}
-
-		ea, _, err := net.SplitHostPort(r.RemoteAddr)
-		if err != nil {
-			http.NotFound(w, r)
-			return
-		}
-
-		devices.Lock()
-		defer devices.Unlock()
-
-		if i, ok := findDevice(ia, ea); ok {
-			devices.d[i].Id = id
-			devices.d[i].Name = name
-			devices.d[i].Added = time.Now()
-		} else {
-			devices.d = append(devices.d, Device{
-				ExternalAddress: ea,
-				InternalAddress: ia,
-				Id:              id,
-				Name:            name,
-				Added:           time.Now(),
-			})
-		}
-	})
-
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {})
 
 	http.HandleFunc("/api/devices", func(w http.ResponseWriter, r *http.Request) {
@@ -142,25 +106,7 @@ func main() {
 		}
 	})
 
-	http.Handle("/devices/", http.StripPrefix("/devices/", http.FileServer(http.Dir("public"))))
-
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		ea, _, err := net.SplitHostPort(r.RemoteAddr)
-		if err != nil {
-			http.NotFound(w, r)
-			return
-		}
-
-		devices.Lock()
-		defer devices.Unlock()
-
-		ds := devicesFor(ea)
-		if len(ds) > 0 {
-			http.Redirect(w, r, ds[0].InternalAddress, 302)
-		} else {
-			http.Redirect(w, r, "/devices", 302)
-		}
-	})
+	http.Handle("/", http.FileServer(http.Dir("public")))
 
 	go cleanup()
 
