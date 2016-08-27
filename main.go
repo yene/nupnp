@@ -23,7 +23,6 @@ type Device struct {
 	ExternalAddress string    `json:"-"`
 	InternalAddress string    `json:"internaladdress"`
 	Port            int       `json:"port"` // optional
-	Id              string    `json:"-"`    // not used atm
 	Name            string    `json:"name"`
 	Added           time.Time `json:"added"`
 }
@@ -43,7 +42,6 @@ func main() {
 		}
 
 		var t struct {
-			Id      string `json:"id"`
 			Name    string `json:"name"`
 			Address string `json:"address"`
 			Port    int    `json:"port"`
@@ -88,7 +86,6 @@ func main() {
 		defer devices.Unlock()
 
 		if i, ok := findDevice(t.Address, ea); ok {
-			devices.d[i].Id = t.Id
 			devices.d[i].Name = t.Name
 			devices.d[i].Port = t.Port
 			devices.d[i].Added = time.Now()
@@ -97,7 +94,6 @@ func main() {
 				ExternalAddress: ea,
 				InternalAddress: t.Address,
 				Port:            t.Port,
-				Id:              t.Id,
 				Name:            t.Name,
 				Added:           time.Now(),
 			})
