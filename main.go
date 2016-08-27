@@ -61,16 +61,13 @@ func main() {
 		}
 
 		if net.ParseIP(t.Address) == nil {
-			// TODO: replace address with the IP
 			http.Error(w, `"address" is not a valid IP address`, http.StatusBadRequest)
 			return
 		}
 
 		// TODO: detect if address is  not local,
-		// I guess 192. and 172. and 10. and ms/apple static
-		if !addressIsLocal(t.Address) {
-			// TODO: replace address with the IP
-			http.Error(w, `"address" is not a typical local IP address`, http.StatusBadRequest)
+		if !addressIsPrivate(t.Address) {
+			http.Error(w, `"address" is not in a private network`, http.StatusBadRequest)
 			return
 		}
 
@@ -150,14 +147,27 @@ func devicesFor(ea string) []Device {
 	return found
 }
 
-func addressIsLocal(addr string) bool {
-	if strings.HasPrefix(addr, "192.168") {
+func addressIsPrivate(addr string) bool {
+	// 192.168.0.0 - 192.168.255.255
+	if strings.HasPrefix(addr, "192.168.") {
 		return true
 	}
-	if strings.HasPrefix(addr, "172.") {
+	// 172.16.0.0 - 172.31.255.255
+	if strings.HasPrefix(addr, "172.2") ||
+		strings.HasPrefix(addr, "172.16") ||
+		strings.HasPrefix(addr, "172.17") ||
+		strings.HasPrefix(addr, "172.18") ||
+		strings.HasPrefix(addr, "172.19") ||
+		strings.HasPrefix(addr, "172.30") ||
+		strings.HasPrefix(addr, "172.31") {
 		return true
 	}
-	if strings.HasPrefix(addr, "10.0") {
+	// 169.254.0.0 - 169.254.254.255
+	if strings.HasPrefix(addr, "169.254.") {
+		return true
+	}
+	// 10.0.0.0 - 10.255.255.255
+	if strings.HasPrefix(addr, "10.") {
 		return true
 	}
 
