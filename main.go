@@ -79,6 +79,19 @@ func main() {
 			return
 		}
 
+		if ea == "127.0.0.1" {
+			// Check if proxy was configured.
+			xrealip := r.Header.Get("x-real-ip")
+			if xrealip != "" {
+				ea = xrealip
+			} else {
+				log.Println("127.0.0.1 tried to add an address, this can happen when proxy is not configured correctly.")
+				http.Error(w, `Host 127.0.0.1 is not allowed to register devices`, http.StatusBadRequest)
+				http.NotFound(w, r)
+				return
+			}
+		}
+
 		devices.Lock()
 		defer devices.Unlock()
 
@@ -86,6 +99,7 @@ func main() {
 			devices.d[i].Name = t.Name
 			devices.d[i].Port = t.Port
 			devices.d[i].Added = time.Now()
+			log.Println(time.Now(), ea, "updated", t.Address)
 		} else {
 			devices.d = append(devices.d, Device{
 				ExternalAddress: ea,
@@ -94,6 +108,7 @@ func main() {
 				Name:            t.Name,
 				Added:           time.Now(),
 			})
+			log.Println(time.Now(), ea, "added", t.Address)
 		}
 
 		fmt.Fprintf(w, "Successfully added, visit https://nupnp.com for more.\n")
@@ -106,6 +121,10 @@ func main() {
 		if err != nil {
 			http.NotFound(w, r)
 			return
+		}
+
+		if ea == "127.0.0.1" {
+			ea = r.Header.Get("x-real-ip")
 		}
 
 		devices.Lock()
