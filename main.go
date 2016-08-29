@@ -22,7 +22,7 @@ var devices struct {
 type Device struct {
 	ExternalAddress string    `json:"-"`
 	InternalAddress string    `json:"internaladdress"`
-	Port            int       `json:"port"` // optional
+	Port            int       `json:"port,omitempty"` // optional
 	Name            string    `json:"name"`
 	Added           time.Time `json:"added"`
 }
