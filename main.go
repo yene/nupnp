@@ -65,22 +65,20 @@ func main() {
 			return
 		}
 
-		// TODO: detect if address is  not local,
 		if !addressIsPrivate(t.Address) {
 			http.Error(w, `"address" is not in a private network`, http.StatusBadRequest)
 			return
 		}
 
 		// TODO: validate parameter name required and no html/js
-
 		ea, _, err := net.SplitHostPort(r.RemoteAddr)
 		if err != nil {
 			http.NotFound(w, r)
 			return
 		}
 
+		// Check if proxy was configured.
 		if ea == "127.0.0.1" {
-			// Check if proxy was configured.
 			xrealip := r.Header.Get("x-real-ip")
 			if xrealip != "" {
 				ea = xrealip
@@ -123,8 +121,16 @@ func main() {
 			return
 		}
 
+		// Check if proxy was configured.
 		if ea == "127.0.0.1" {
-			ea = r.Header.Get("x-real-ip")
+			xrealip := r.Header.Get("x-real-ip")
+			if xrealip != "" {
+				ea = xrealip
+			} else {
+				log.Println("127.0.0.1 tried to access an address, this can happen when proxy is not configured correctly.")
+				http.NotFound(w, r)
+				return
+			}
 		}
 
 		devices.Lock()
@@ -142,7 +148,7 @@ func main() {
 	go cleanup()
 
 	fmt.Println("listen on", httpAddr)
-	// TODO: use http.ListenAndServeTLS(":443", "cert.pem", "key.pem", nil)
+	// Note: use TLS
 	log.Fatal(http.ListenAndServe(httpAddr, nil))
 
 }
