@@ -30,119 +30,9 @@ type Device struct {
 func main() {
 	devices.d = make([]Device, 0)
 
-	http.HandleFunc("/api/register", func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("Content-Type") != "application/json" {
-			http.Error(w, "Please send json", 400)
-			return
-		}
-
-		if r.Body == nil {
-			http.Error(w, "Please send a request body", 400)
-			return
-		}
-
-		var t struct {
-			Name    string `json:"name"`
-			Address string `json:"address"`
-			Port    int    `json:"port"`
-		}
-
-		err := json.NewDecoder(r.Body).Decode(&t)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
-		}
-
-		t.Address = strings.Trim(t.Address, " ")
-
-		if t.Address == "127.0.0.1" {
-			http.Error(w, `"127.0.0.1" is not allowed`, http.StatusBadRequest)
-			return
-		}
-
-		if net.ParseIP(t.Address) == nil {
-			http.Error(w, `"address" is not a valid IP address`, http.StatusBadRequest)
-			return
-		}
-
-		if !addressIsPrivate(t.Address) {
-			http.Error(w, `"address" is not in a private network`, http.StatusBadRequest)
-			return
-		}
-
-		// TODO: validate parameter name required and no html/js
-		ea, _, err := net.SplitHostPort(r.RemoteAddr)
-		if err != nil {
-			http.NotFound(w, r)
-			return
-		}
-
-		// Check if proxy was configured.
-		if ea == "127.0.0.1" {
-			xrealip := r.Header.Get("x-real-ip")
-			if xrealip != "" {
-				ea = xrealip
-			} else {
-				log.Println("127.0.0.1 tried to add an address, this can happen when proxy is not configured correctly.")
-				http.Error(w, `Host 127.0.0.1 is not allowed to register devices`, http.StatusBadRequest)
-				http.NotFound(w, r)
-				return
-			}
-		}
-
-		devices.Lock()
-		defer devices.Unlock()
-
-		if i, ok := findDevice(t.Address, ea); ok {
-			devices.d[i].Name = t.Name
-			devices.d[i].Port = t.Port
-			devices.d[i].Added = time.Now()
-			log.Println(time.Now(), ea, "updated", t.Address)
-		} else {
-			devices.d = append(devices.d, Device{
-				ExternalAddress: ea,
-				InternalAddress: t.Address,
-				Port:            t.Port,
-				Name:            t.Name,
-				Added:           time.Now(),
-			})
-			log.Println(time.Now(), ea, "added", t.Address)
-		}
-
-		fmt.Fprintf(w, "Successfully added, visit https://nupnp.com for more.\n")
-	})
-
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {})
-
-	http.HandleFunc("/api/devices", func(w http.ResponseWriter, r *http.Request) {
-		ea, _, err := net.SplitHostPort(r.RemoteAddr)
-		if err != nil {
-			http.NotFound(w, r)
-			return
-		}
-
-		// Check if proxy was configured.
-		if ea == "127.0.0.1" {
-			xrealip := r.Header.Get("x-real-ip")
-			if xrealip != "" {
-				ea = xrealip
-			} else {
-				log.Println("127.0.0.1 tried to access an address, this can happen when proxy is not configured correctly.")
-				http.NotFound(w, r)
-				return
-			}
-		}
-
-		devices.Lock()
-		defer devices.Unlock()
-
-		ds := devicesFor(ea)
-		w.Header().Set("Content-Type", "application/json")
-		if err := json.NewEncoder(w).Encode(ds); err != nil {
-			panic(err)
-		}
-	})
-
+	http.HandleFunc("/api/register", RegisterDevice)
+	http.HandleFunc("/api/devices", ListDevices)
 	http.Handle("/", http.FileServer(http.Dir("public")))
 
 	go cleanup()
@@ -206,6 +96,117 @@ func addressIsPrivate(addr string) bool {
 	}
 
 	return false
+}
+
+func RegisterDevice(w http.ResponseWriter, r *http.Request) {
+	if r.Header.Get("Content-Type") != "application/json" {
+		http.Error(w, "Please send json", 400)
+		return
+	}
+
+	if r.Body == nil {
+		http.Error(w, "Please send a request body", 400)
+		return
+	}
+
+	var t struct {
+		Name    string `json:"name"`
+		Address string `json:"address"`
+		Port    int    `json:"port"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&t)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	t.Address = strings.Trim(t.Address, " ")
+
+	if t.Address == "127.0.0.1" {
+		http.Error(w, `"127.0.0.1" is not allowed`, http.StatusBadRequest)
+		return
+	}
+
+	if net.ParseIP(t.Address) == nil {
+		http.Error(w, `"address" is not a valid IP address`, http.StatusBadRequest)
+		return
+	}
+
+	if !addressIsPrivate(t.Address) {
+		http.Error(w, `"address" is not in a private network`, http.StatusBadRequest)
+		return
+	}
+
+	// TODO: validate parameter name required and no html/js
+	ea, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	// Check if proxy was configured.
+	if ea == "127.0.0.1" {
+		xrealip := r.Header.Get("x-real-ip")
+		if xrealip != "" {
+			ea = xrealip
+		} else {
+			log.Println("127.0.0.1 tried to add an address, this can happen when proxy is not configured correctly.")
+			http.Error(w, `Host 127.0.0.1 is not allowed to register devices`, http.StatusBadRequest)
+			http.NotFound(w, r)
+			return
+		}
+	}
+
+	devices.Lock()
+	defer devices.Unlock()
+
+	if i, ok := findDevice(t.Address, ea); ok {
+		devices.d[i].Name = t.Name
+		devices.d[i].Port = t.Port
+		devices.d[i].Added = time.Now()
+		log.Println(time.Now(), ea, "updated", t.Address)
+	} else {
+		devices.d = append(devices.d, Device{
+			ExternalAddress: ea,
+			InternalAddress: t.Address,
+			Port:            t.Port,
+			Name:            t.Name,
+			Added:           time.Now(),
+		})
+		log.Println(time.Now(), ea, "added", t.Address)
+	}
+
+	fmt.Fprintf(w, "Successfully added, visit https://nupnp.com for more.\n")
+}
+
+func ListDevices(w http.ResponseWriter, r *http.Request) {
+	ea, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	// Check if proxy was configured.
+	if ea == "127.0.0.1" {
+		xrealip := r.Header.Get("x-real-ip")
+		if xrealip != "" {
+			ea = xrealip
+		} else {
+			log.Println("127.0.0.1 tried to access an address, this can happen when proxy is not configured correctly.")
+			http.NotFound(w, r)
+			return
+		}
+	}
+
+	devices.Lock()
+	defer devices.Unlock()
+
+	ds := devicesFor(ea)
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(ds); err != nil {
+		panic(err)
+	}
 }
 
 func cleanup() {
