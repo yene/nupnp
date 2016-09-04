@@ -66,13 +66,12 @@
         Any entry gets deleted after <strong>24h</strong> and can only be accessed by the <strong>same</strong> internet connection which registered it.
       </p>
 
+      <p>To register your a device:</p>
       <p>
-        To register your a device send a POST request:
         <pre><code class="bash">curl -H "Content-Type: application/json" -X POST -d '{"name":"Devicename","address":"192.168.1.XX"}' https://nupnp.com/api/register</code></pre>
-      </p>
-
       <p>
-        <a class="modal-open">How to setup on Raspberry Pi</a>
+      <br>
+        <a class="modal-open">How to setup on a Raspberry Pi</a>
       </p>
     </div>
   </section>
@@ -85,16 +84,13 @@
           <h3 class="title is-3">How to setup on Raspberry Pi</h3>
           <ul>
             <li>1. Edit the crontab file with <code>crontab -e</code>.</li>
-            <li>2. If you want to register after each reboot paste:</li>
+            <li>2. To register after a reboot and daily at midnight:</li>
             <li>
-            <pre><code class="bash">@reboot sleep 10 && /usr/bin/curl -H "Content-Type: application/json" -X POST -d "{\"name\":\"$(hostname)\",\"address\":\"$(hostname -I)\"}" https://nupnp.com/api/register</code></pre>
+            <pre><code class="bash">@reboot sleep 10 && /usr/bin/curl -H "Content-Type: application/json" -X POST -d "{\"name\":\"$(hostname)\",\"address\":\"$(hostname -I)\"}" https://nupnp.com/api/register
+@daily /usr/bin/curl -H "Content-Type: application/json" -X POST -d "{\"name\":\"$(hostname)\",\"address\":\"$(hostname -I)\"}" https://nupnp.com/api/register</code></pre>
             </li>
-            <li>3. If you want to register daily at midnight paste:</li>
-            <li>
-            <pre><code class="bash">@daily /usr/bin/curl -H "Content-Type: application/json" -X POST -d "{\"name\":\"$(hostname)\",\"address\":\"$(hostname -I)\"}" https://nupnp.com/api/register</code></pre>
-            </li>
-            <li>4. Save and restart device</li>
-            <li>5. Refresh <a href="https://nupnp.com">nupnp.com</a></li>
+            <li>4. Save and restart device.</li>
+            <li>5. Refresh <a href="https://nupnp.com">nupnp.com</a>.</li>
           </ul>
         </div>
       </div>

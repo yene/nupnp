@@ -74,8 +74,7 @@ body section + section {
 }
 
 /* overwriting retarded bulma.io styles */
-
-a:hover {
+section a:hover {
   color: #1fc8db;
   text-decoration: underline;
 }
