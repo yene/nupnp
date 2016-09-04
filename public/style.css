@@ -47,6 +47,10 @@ body section + section {
 }
 */
 
+.device-container {
+  font-size: 18px;
+}
+
 .fa-check {
   font-size: 45px !important;
   color: #5ba25b;
@@ -68,3 +72,17 @@ body section + section {
 .light-icon[data-state="false"] {
   color: #e84135;
 }
+
+/* overwriting retarded bulma.io styles */
+
+a:hover {
+  color: #1fc8db;
+  text-decoration: underline;
+}
+
+.device-list {
+  list-style-position: inside;
+  list-style-type: circle;
+}
+
+
