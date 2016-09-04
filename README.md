@@ -32,12 +32,12 @@ curl -H "Content-Type: application/json" -X POST -d "{\"name\":\"$(hostname)\",\
 
 ## TODO
 - [ ] Test with external IP
-- [ ] setup at home
-- [ ] can mutex be replaced by channels
+- [ ] improve Go mutex
 - [ ] add anonymous logging of the requests
 - [ ] Support for IPv6
-- [ ] add timeago
-- [ ] add highliht.js
+- [ ] Improve tests
+- [ ] Improve [private address](https://en.wikipedia.org/wiki/Private_network) check
+- [ ] Fix the responsive resize
 
 ## Branding
 Create subdomains for companies, and let their devices register with custom secret.
@@ -46,7 +46,7 @@ Create subdomains for companies, and let their devices register with custom secr
 go install && killall nupnp && nohup nupnp &
 
 ## Security
-Never allow another IP address to access the data. Remove the entries after 24h.
+Never allow another IP address to access the data. Remove the entries after 24h. If you use a proxy prevent external access to the API server.
 
 ## Font
 Font used is Days.
