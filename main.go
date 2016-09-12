@@ -86,6 +86,11 @@ func RegisterDevice(w http.ResponseWriter, r *http.Request) {
 
 	t.Address = strings.Trim(t.Address, " ")
 
+	if net.ParseIP(t.Address) == nil {
+		http.Error(w, t.Address+" is not a valid IP address", http.StatusBadRequest)
+		return
+	}
+
 	// Prevent simple loopback mistake
 	if t.Address == "127.0.0.1" || t.Address == "::1" {
 		http.Error(w, `Loopback is not allowed`, http.StatusBadRequest)

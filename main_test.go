@@ -130,3 +130,66 @@ func TestLoopbackAddress(t *testing.T) {
 			status, rr.Body)
 	}
 }
+
+func TestNonIP(t *testing.T) {
+	body := bytes.NewBufferString("{\"name\":\"Testdevice\",\"address\":\"192.168.300 \"}")
+	req, err := http.NewRequest("POST", "/api/register", body)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	req.Header.Add("Content-Type", "application/json")
+	req.RemoteAddr = "80.2.3.41:321"
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(RegisterDevice)
+
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusBadRequest {
+		t.Errorf("handler returned wrong status code: got %v - %v",
+			status, rr.Body)
+	}
+}
+
+func TestIPv6(t *testing.T) {
+	body := bytes.NewBufferString("{\"name\":\"Testdevice\",\"address\":\"2001:db8:a0b:12f0::1 \"}")
+	req, err := http.NewRequest("POST", "/api/register", body)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	req.Header.Add("Content-Type", "application/json")
+	req.RemoteAddr = "80.2.3.41:321"
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(RegisterDevice)
+
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v - %v",
+			status, rr.Body)
+	}
+}
+
+func TestIPv6URL(t *testing.T) {
+	body := bytes.NewBufferString("{\"name\":\"Testdevice\",\"address\":\"[2001:db8:a0b:12f0::1]\"}")
+	req, err := http.NewRequest("POST", "/api/register", body)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	req.Header.Add("Content-Type", "application/json")
+	req.RemoteAddr = "80.2.3.41:321"
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(RegisterDevice)
+
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusBadRequest {
+		t.Errorf("handler returned wrong status code: got %v - %v",
+			status, rr.Body)
+	}
+}
