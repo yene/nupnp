@@ -40,7 +40,6 @@ func main() {
 	fmt.Println("listen on", httpAddr)
 	// Note: use TLS
 	log.Fatal(http.ListenAndServe(httpAddr, nil))
-
 }
 
 func findDevice(ia string, ea string) (int, bool) {
@@ -87,8 +86,9 @@ func RegisterDevice(w http.ResponseWriter, r *http.Request) {
 
 	t.Address = strings.Trim(t.Address, " ")
 
-	if t.Address == "127.0.0.1" {
-		http.Error(w, `"127.0.0.1" is not allowed`, http.StatusBadRequest)
+	// Prevent simple loopback mistake
+	if t.Address == "127.0.0.1" || t.Address == "::1" {
+		http.Error(w, `Loopback is not allowed`, http.StatusBadRequest)
 		return
 	}
 
