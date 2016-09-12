@@ -62,42 +62,6 @@ func devicesFor(ea string) []Device {
 	return found
 }
 
-func addressIsPrivate(addr string) bool {
-	// 192.168.0.0 - 192.168.255.255
-	if strings.HasPrefix(addr, "192.168.") {
-		return true
-	}
-	// 172.16.0.0 - 172.31.255.255
-	if strings.HasPrefix(addr, "172.16.") ||
-		strings.HasPrefix(addr, "172.17.") ||
-		strings.HasPrefix(addr, "172.18.") ||
-		strings.HasPrefix(addr, "172.19.") ||
-		strings.HasPrefix(addr, "172.20.") ||
-		strings.HasPrefix(addr, "172.21.") ||
-		strings.HasPrefix(addr, "172.22.") ||
-		strings.HasPrefix(addr, "172.23.") ||
-		strings.HasPrefix(addr, "172.24.") ||
-		strings.HasPrefix(addr, "172.25.") ||
-		strings.HasPrefix(addr, "172.26.") ||
-		strings.HasPrefix(addr, "172.27.") ||
-		strings.HasPrefix(addr, "172.28.") ||
-		strings.HasPrefix(addr, "172.29.") ||
-		strings.HasPrefix(addr, "172.30.") ||
-		strings.HasPrefix(addr, "172.31.") {
-		return true
-	}
-	// 169.254.0.0 - 169.254.254.255
-	if strings.HasPrefix(addr, "169.254.") {
-		return true
-	}
-	// 10.0.0.0 - 10.255.255.255
-	if strings.HasPrefix(addr, "10.") {
-		return true
-	}
-
-	return false
-}
-
 func RegisterDevice(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("Content-Type") != "application/json" {
 		http.Error(w, "Please send json", 400)
@@ -130,11 +94,6 @@ func RegisterDevice(w http.ResponseWriter, r *http.Request) {
 
 	if net.ParseIP(t.Address) == nil {
 		http.Error(w, `"address" is not a valid IP address`, http.StatusBadRequest)
-		return
-	}
-
-	if !addressIsPrivate(t.Address) {
-		http.Error(w, `"address" is not in a private network`, http.StatusBadRequest)
 		return
 	}
 
