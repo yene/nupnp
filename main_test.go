@@ -2,9 +2,9 @@ package main
 
 import (
 	"bytes"
-	"log"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -45,23 +45,40 @@ func TestList(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Fake remoteAddr, does not have to be tested, because user cannot change it.
-	// If it is 127.0.0.1, then the server thinks its a proxy.
 	req.RemoteAddr = "80.2.3.41:321"
 
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(ListDevices)
 
-	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
-	// directly and pass in our Request and ResponseRecorder.
 	handler.ServeHTTP(rr, req)
 
-	// Check the status code is what we expect.
 	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v - %v",
-			status, rr.Body)
+		t.Errorf("handler returned wrong status code: got %v - %v", status, rr.Body)
 	}
 
-	log.Print(rr.Body.String())
+	if !strings.HasPrefix(rr.Body.String(), `[{"internaladdress":"192.168.100.151","name":"Testdevice","added"`) {
+		t.Errorf("handler returned unexpected body: got %v", rr.Body.String())
+	}
+}
 
+func TestInvalidAccess(t *testing.T) {
+	req, err := http.NewRequest("GET", "/api/devices", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	req.RemoteAddr = "80.2.3.42:321"
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(ListDevices)
+
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v - %v", status, rr.Body)
+	}
+
+	if rr.Body.String() != "[]\n" {
+		t.Errorf("handler returned unexpected body: got %v", rr.Body.String())
+	}
 }
