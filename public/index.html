@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>NUPNP</title>
   <link rel="icon" type="image/png" href="/favicon.png">
-  <link rel="stylesheet" media="screen" href="https://raw.github.com/necolas/normalize.css/master/normalize.css">
+  <link rel="stylesheet" media="screen" href="normalize.min.css">
   <link rel="stylesheet" href="font-awesome-4.6.3/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="bulma-0.1.2/css/bulma.css"/>
   <link rel="stylesheet" type="text/css" href="style.css"/>
@@ -27,9 +27,6 @@
           <span></span>
         </span>
         <div class="nav-right nav-menu">
-          <a class="nav-item is-active" href="#devices">
-            Devices
-          </a>
           <span class="nav-item">
             <a class="button is-primary is-inverted" href="https://github.com/yene/nupnp">
               <span class="icon">
@@ -54,7 +51,7 @@
         </li>
       </template>
       <ul class="device-list">
-        <li>No devices found.</li>
+        <li>No devices registered.</li>
       </ul>
     </div>
   </section>
@@ -65,38 +62,22 @@
       <p>
         Any entry gets deleted after <strong>24h</strong> and can only be accessed by the <strong>same</strong> internet connection which registered it.
       </p>
+      <br>
 
-      <p>To register a device:</p>
+      <p>To register a device for 24h:</p>
       <p>
         <pre><code class="bash">curl -H "Content-Type: application/json" -X POST -d '{"name":"Devicename","address":"192.168.1.XX"}' https://nupnp.com/api/register</code></pre>
       <p>
-      <br>
-        <a class="modal-open">How to setup on a Raspberry Pi</a>
       </p>
+      <br>
+      <p>To register a Raspberry Pi every night, add this to crontab:</p>
+        <pre><code class="bash">@reboot sleep 10 && /usr/bin/curl -H "Content-Type: application/json" -X POST -d "{\"name\":\"$(hostname)\",\"address\":\"$(hostname -I)\"}" https://nupnp.com/api/register
+@daily /usr/bin/curl -H "Content-Type: application/json" -X POST -d "{\"name\":\"$(hostname)\",\"address\":\"$(hostname -I)\"}" https://nupnp.com/api/register</code></pre>
+      <br>
+      </p>
+
     </div>
   </section>
-
-  <div class="modal">
-    <div class="modal-background"></div>
-    <div class="modal-container">
-      <div class="modal-content">
-        <div class="box">
-          <h3 class="title is-3">How to setup on Raspberry Pi</h3>
-          <ul>
-            <li>1. Edit the crontab file with <code>crontab -e</code>.</li>
-            <li>2. To register after a reboot and daily at midnight:</li>
-            <li>
-            <pre><code class="bash">@reboot sleep 10 && /usr/bin/curl -H "Content-Type: application/json" -X POST -d "{\"name\":\"$(hostname)\",\"address\":\"$(hostname -I)\"}" https://nupnp.com/api/register
-@daily /usr/bin/curl -H "Content-Type: application/json" -X POST -d "{\"name\":\"$(hostname)\",\"address\":\"$(hostname -I)\"}" https://nupnp.com/api/register</code></pre>
-            </li>
-            <li>4. Save and restart device.</li>
-            <li>5. Refresh <a href="https://nupnp.com">nupnp.com</a>.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <button class="modal-close"></button>
-  </div>
 
   <footer class="footer">
     <div class="container">

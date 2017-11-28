@@ -23,6 +23,7 @@ http://localhost:8180/api/devices
 
 * http://www.meethue.com/api/nupnp
 * http://find.z-wave.me
+* http://setup.thinka.eu
 
 ## Questions
 * Should it filter IP addresses -> just prevent simple loopback error
@@ -33,7 +34,7 @@ http://localhost:8180/api/devices
 - [ ] Proxy should be a flag
 
 ## Restarting demon
-`go install && killall nupnp && nohup nupnp &`
+`go install; killall nupnp; nohup nupnp &`
 
 ## Security
 Never allow another IP address to access the data. Remove the entries after 24h. If you use a proxy prevent external access to the API server.

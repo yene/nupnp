@@ -8,17 +8,6 @@ document.addEventListener('DOMContentLoaded', setupUI);
 function setupUI() {
   listDevices();
   document.querySelector('.nav-toggle').addEventListener ('click', toggleNav);
-  document.querySelector('.modal-open').addEventListener('click', openModal);
-  document.querySelector('.modal-close').addEventListener('click', closeModal);
-  document.querySelector('.modal-background').addEventListener('click', closeModal);
-}
-
-function openModal() {
-  document.querySelector('.modal').classList.add('is-active');
-}
-
-function closeModal() {
-  document.querySelector('.modal').classList.remove('is-active');
 }
 
 function toggleNav() {
