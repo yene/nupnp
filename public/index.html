@@ -71,8 +71,8 @@
       </p>
       <br>
       <p>To register a Raspberry Pi every night, add this to crontab:</p>
-        <pre><code class="bash">@reboot sleep 10 && /usr/bin/curl -H "Content-Type: application/json" -X POST -d "{\"name\":\"$(hostname)\",\"address\":\"$(hostname -I)\"}" https://nupnp.com/api/register
-@daily /usr/bin/curl -H "Content-Type: application/json" -X POST -d "{\"name\":\"$(hostname)\",\"address\":\"$(hostname -I)\"}" https://nupnp.com/api/register</code></pre>
+        <pre><code class="bash">@reboot sleep 10 && /usr/bin/curl -H "Content-Type: application/json" -X POST -d "{\"name\":\"$(hostname)\",\"address\":\"$(hostname -I | cut -d' ' -f1)\"}" https://nupnp.com/api/register
+          @daily /usr/bin/curl -H "Content-Type: application/json" -X POST -d "{\"name\":\"$(hostname)\",\"address\":\"$(hostname -I | cut -d' ' -f1)\"}" https://nupnp.com/api/register</code></pre>
       <br>
       </p>
 
