@@ -33,8 +33,8 @@ http://localhost:8180/api/devices
 ## TODO
 - [ ] Proxy should be a flag
 
-## Restarting demon
-`go install; killall nupnp; nohup nupnp &`
+## Cross compile
+`env GOOS=linux GOARCH=amd64 go build`
 
 ## Security
 Never allow another IP address to access the data. Remove the entries after 24h. If you use a proxy prevent external access to the API server.
